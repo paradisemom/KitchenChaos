@@ -7,19 +7,80 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed=7f;
     [SerializeField] private GameInput gameInput;
+    [SerializeField] private LayerMask layerMask;
     private bool isWalking;
-    private void Awake() {
+    private Vector3 lastDir;
+
+    private void Start() {
+        gameInput.OnInteract+=GameInput_OnInteract;
+    }
+    private void GameInput_OnInteract(object sender,System.EventArgs e){
+        Vector2 inputVector=gameInput.GetInputVectorNormalized();
+        Vector3 moveDir=new Vector3(inputVector.x,0f,inputVector.y);
+        if(moveDir!=Vector3.zero){
+            lastDir=moveDir;
+        }
+
+        float InteractionDistance=2f;
+        if( Physics.Raycast(transform.position,lastDir,out RaycastHit raycastHit,InteractionDistance,layerMask)){
+                if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)){
+                    clearCounter.Interact();
+                }
+       }
     }
     private void Update() {
-        Vector2 inputVector=gameInput.GetInputVectorNormalized();
-        Vector3 myDir=new Vector3(inputVector.x,0f,inputVector.y);
-        transform.position+=myDir*moveSpeed*Time.deltaTime;
-        isWalking=myDir!=Vector3.zero;
-        float rotateSpeed=10f;
-        transform.forward=Vector3.Slerp(transform.forward,-myDir,Time.deltaTime*rotateSpeed);
-        
-    }
+        HandleMovement();
+        HandleInteraction();
+    }   
     public bool IsWalking(){
         return isWalking;
+    }
+    private void HandleInteraction(){
+        Vector2 inputVector=gameInput.GetInputVectorNormalized();
+        Vector3 moveDir=new Vector3(inputVector.x,0f,inputVector.y);
+        if(moveDir!=Vector3.zero){
+            lastDir=moveDir;
+        }
+
+        float InteractionDistance=2f;
+        if( Physics.Raycast(transform.position,lastDir,out RaycastHit raycastHit,InteractionDistance,layerMask)){
+                if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)){
+                    
+                }
+       }
+       
+    }
+    private void HandleMovement(){
+        Vector2 inputVector=gameInput.GetInputVectorNormalized();
+        Vector3 moveDir=new Vector3(inputVector.x,0f,inputVector.y);
+        
+        isWalking=moveDir!=Vector3.zero;
+        float playerRadius=.7f;
+        float playerHeight=2f;
+        float moveDistance=moveSpeed*Time.deltaTime;
+        bool canMove=!Physics.CapsuleCast(transform.position,transform.position+Vector3.up*playerHeight,playerRadius,moveDir,moveDistance);
+        float rotateSpeed=10f;
+        if(!canMove){
+            Vector3 moveDirX=new Vector3(moveDir.x,0,0).normalized;
+            bool canMoveX=!Physics.CapsuleCast(transform.position,transform.position+Vector3.up*playerHeight,playerRadius,moveDirX,moveDistance);
+            if(canMoveX){
+                transform.position+=moveDirX*moveDistance; 
+            }else {
+                Vector3 moveDirZ=new Vector3(0,0,moveDir.z).normalized;
+                bool canMoveZ=!Physics.CapsuleCast(transform.position,transform.position+Vector3.up*playerHeight,playerRadius,moveDirZ,moveDistance);
+                if(canMoveZ){
+                    transform.position+=moveDirZ*moveDistance; 
+                }else{
+
+                }
+            }
+        }
+        if(canMove){
+            transform.position+=moveDir*moveDistance; 
+        }
+        
+        transform.forward=Vector3.Slerp(transform.forward,-moveDir,Time.deltaTime*rotateSpeed);
+        
+        
     }
 }
