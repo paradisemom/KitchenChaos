@@ -34,6 +34,7 @@ Transform:
   m_Children:
   - {fileID: 1025860244881236504}
   - {fileID: 5861608785972190540}
+  - {fileID: 3765994821596499307}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1609800139566055482
@@ -69,6 +70,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a937a127e0a8c764e9bea3942e299b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  kitchenObjectSO: {fileID: 11400000, guid: 208e79d9c1fa89f468b7cacac8c6a818, type: 2}
+  counterTopPoint: {fileID: 3765994821596499307}
+  secondClearCounter: {fileID: 0}
+  testing: 0
 --- !u!114 &3138134902439099937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83,6 +88,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clearCounter: {fileID: 3907145197216617819}
   visualGameObject: {fileID: 4918666897235854844}
+--- !u!1 &5347509639743388536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3765994821596499307}
+  m_Layer: 6
+  m_Name: CounterTopPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3765994821596499307
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5347509639743388536}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5979084795892977665}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3570621623234594483
 PrefabInstance:
   m_ObjectHideFlags: 0

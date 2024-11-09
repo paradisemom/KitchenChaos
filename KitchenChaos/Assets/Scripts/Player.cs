@@ -4,19 +4,22 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour,IKitchenObjectParent
 {
     public static Player Instance {get;private set;}
     public EventHandler<OnSelectedCounterChangedEvectArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEvectArgs:EventArgs{
-        public ClearCounter selectedCounter;
+        public IKitchenObjectPraent selectedCounter;
     }
     [SerializeField] private float moveSpeed=7f;
+    
+    [SerializeField] private Transform KitchenObjectHoldPoint;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask layerMask;
     private bool isWalking;
     private Vector3 lastDir;
-    private ClearCounter selectedCounter;
+    private IKitchenObjectPraent selectedCounter;
+    private KitchenObject kitchenObject;
 
     private void Awake() {
         if(Instance!=null){
@@ -29,7 +32,7 @@ public class Player : MonoBehaviour
     }
     private void GameInput_OnInteract(object sender,System.EventArgs e){
         if(selectedCounter!=null){
-            selectedCounter.Interact();
+            selectedCounter.Interact(this);
         }
     }
     private void Update() {
@@ -48,7 +51,7 @@ public class Player : MonoBehaviour
 
         float InteractionDistance=2f;
         if( Physics.Raycast(transform.position,lastDir,out RaycastHit raycastHit,InteractionDistance,layerMask)){
-                if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)){
+                if(raycastHit.transform.TryGetComponent(out IKitchenObjectPraent clearCounter)){
                     if(clearCounter!=selectedCounter){
                         SetSelectedCounter(clearCounter);
                     }
@@ -94,10 +97,25 @@ public class Player : MonoBehaviour
         
         
     }
-    private void SetSelectedCounter(ClearCounter selectedCounter){
+    private void SetSelectedCounter(IKitchenObjectPraent selectedCounter){
         this.selectedCounter=selectedCounter;
         OnSelectedCounterChanged?.Invoke(this,new OnSelectedCounterChangedEvectArgs{
               selectedCounter=selectedCounter
             });
+    }
+        public Transform GetKichenObjectFllowTransform(){
+        return KitchenObjectHoldPoint;
+    }
+    public void SetKitchenObject(KitchenObject kitchenObject){
+        this.kitchenObject=kitchenObject;
+    }
+    public KitchenObject GetKitchenObject(){
+        return kitchenObject;
+    }
+    public void ClearKitchenOject(){
+        kitchenObject=null;
+    }
+    public bool HasKitchenObject(){
+        return kitchenObject!=null;
     }
 }
