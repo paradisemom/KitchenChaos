@@ -9,7 +9,7 @@ public class Player : MonoBehaviour,IKitchenObjectParent
     public static Player Instance {get;private set;}
     public EventHandler<OnSelectedCounterChangedEvectArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEvectArgs:EventArgs{
-        public IKitchenObjectPraent selectedCounter;
+        public BaseCounter selectedCounter;
     }
     [SerializeField] private float moveSpeed=7f;
     
@@ -18,7 +18,7 @@ public class Player : MonoBehaviour,IKitchenObjectParent
     [SerializeField] private LayerMask layerMask;
     private bool isWalking;
     private Vector3 lastDir;
-    private IKitchenObjectPraent selectedCounter;
+    private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
 
     private void Awake() {
@@ -51,9 +51,9 @@ public class Player : MonoBehaviour,IKitchenObjectParent
 
         float InteractionDistance=2f;
         if( Physics.Raycast(transform.position,lastDir,out RaycastHit raycastHit,InteractionDistance,layerMask)){
-                if(raycastHit.transform.TryGetComponent(out IKitchenObjectPraent clearCounter)){
-                    if(clearCounter!=selectedCounter){
-                        SetSelectedCounter(clearCounter);
+                if(raycastHit.transform.TryGetComponent(out BaseCounter BaseCounter)){
+                    if(BaseCounter!=selectedCounter){
+                        SetSelectedCounter(BaseCounter);
                     }
                 }else{
                     SetSelectedCounter(null);
@@ -97,13 +97,13 @@ public class Player : MonoBehaviour,IKitchenObjectParent
         
         
     }
-    private void SetSelectedCounter(IKitchenObjectPraent selectedCounter){
+    private void SetSelectedCounter(BaseCounter selectedCounter){
         this.selectedCounter=selectedCounter;
         OnSelectedCounterChanged?.Invoke(this,new OnSelectedCounterChangedEvectArgs{
               selectedCounter=selectedCounter
             });
     }
-        public Transform GetKichenObjectFllowTransform(){
+    public Transform GetKichenObjectFllowTransform(){
         return KitchenObjectHoldPoint;
     }
     public void SetKitchenObject(KitchenObject kitchenObject){
