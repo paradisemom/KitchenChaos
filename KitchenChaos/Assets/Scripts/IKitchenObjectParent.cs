@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IKitchenObjectParent 
 {
+    
     public Transform GetKichenObjectFllowTransform();
     public void SetKitchenObject(KitchenObject kitchenObject);
     public KitchenObject GetKitchenObject();
