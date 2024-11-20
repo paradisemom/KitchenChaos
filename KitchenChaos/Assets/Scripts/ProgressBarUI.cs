@@ -5,13 +5,18 @@ using UnityEngine.UI;
 public class ProgressBarUI : MonoBehaviour
 {
     [SerializeField] private Image barImage;
-    [SerializeField] private CuttingCounter cuttingCounter;
+    [SerializeField] private GameObject hasProgerssGameObject;
+    private IHasProgress hasProgress;
     private void Start() {
-        cuttingCounter.OnProgressChanged+=CuttingCounter_OnProgressChanged;
+        hasProgress=hasProgerssGameObject.GetComponent<IHasProgress>();
+        if(hasProgress==null){
+            Debug.LogError("Game Object"+hasProgerssGameObject+"dose not have a Component that implements IHasProgress");
+        }
+        hasProgress.OnProgressChanged+=HasProgerss_OnProgressChanged;
         barImage.fillAmount=0f;
         Hide();
     }
-    private void CuttingCounter_OnProgressChanged(object sender,CuttingCounter.OnProgressChangedEventArgs e){
+    private void HasProgerss_OnProgressChanged(object sender,IHasProgress.OnProgressChangedEventArgs e){
         barImage.fillAmount=e.progressNromalized;
         if(e.progressNromalized==0f||e.progressNromalized==1f){
             Hide();
